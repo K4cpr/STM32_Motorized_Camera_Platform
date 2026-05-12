@@ -76,7 +76,7 @@ void SystemClockPLL48(void)
 
 	 while (!((RCC->CFGR & RCC_CFGR_SWS_1) && (RCC->CFGR & RCC_CFGR_SWS_0))) { }
 
-	 RCC->CCIPR |= RCC_CCIPR_ADCSEL;
+	// RCC->CCIPR |= RCC_CCIPR_ADCSEL;
 
 }
 
@@ -132,9 +132,9 @@ void SystemClockPLL80(void)
 void SystemClockSetup(void)
 {
 //	SystemClockHSI16();
-	SystemClockPLL48();
-//	SystemClockPLL80();
-	SysTick_Config(48000000 / 1000);
+//	SystemClockPLL48();
+	SystemClockPLL80();
+	SysTick_Config(80000000 / 1000);
 }
 
 void SysTick_Handler(void)

@@ -1,8 +1,0 @@
-../Src/adc.c:15:6:Adc_Gpio_Init	4	static
-../Src/adc.c:28:6:Adc_Config	16	static,ignoring_inline_asm
-../Src/adc.c:54:6:Adc_Init	8	static
-../Src/adc.c:70:10:Adc_ReadTest	16	static
-../Src/adc.c:83:10:Adc_Volt_Read	16	static
-../Src/adc.c:92:6:AdcDmaStart	4	static
-../Src/adc.c:98:9:AdcResult	16	static
-../Src/adc.c:118:10:AdcResultAvg	24	static

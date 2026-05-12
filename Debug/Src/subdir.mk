@@ -5,34 +5,37 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/adc.c \
 ../Src/dma.c \
 ../Src/lpuart.c \
 ../Src/main.c \
+../Src/state_machine.c \
 ../Src/sys_clocks.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c \
-../Src/tim.c 
+../Src/tim.c \
+../Src/uart_protocol.c 
 
 OBJS += \
-./Src/adc.o \
 ./Src/dma.o \
 ./Src/lpuart.o \
 ./Src/main.o \
+./Src/state_machine.o \
 ./Src/sys_clocks.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o \
-./Src/tim.o 
+./Src/tim.o \
+./Src/uart_protocol.o 
 
 C_DEPS += \
-./Src/adc.d \
 ./Src/dma.d \
 ./Src/lpuart.d \
 ./Src/main.d \
+./Src/state_machine.d \
 ./Src/sys_clocks.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d \
-./Src/tim.d 
+./Src/tim.d \
+./Src/uart_protocol.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -42,7 +45,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/dma.cyclo ./Src/dma.d ./Src/dma.o ./Src/dma.su ./Src/lpuart.cyclo ./Src/lpuart.d ./Src/lpuart.o ./Src/lpuart.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/sys_clocks.cyclo ./Src/sys_clocks.d ./Src/sys_clocks.o ./Src/sys_clocks.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/tim.cyclo ./Src/tim.d ./Src/tim.o ./Src/tim.su
+	-$(RM) ./Src/dma.cyclo ./Src/dma.d ./Src/dma.o ./Src/dma.su ./Src/lpuart.cyclo ./Src/lpuart.d ./Src/lpuart.o ./Src/lpuart.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/state_machine.cyclo ./Src/state_machine.d ./Src/state_machine.o ./Src/state_machine.su ./Src/sys_clocks.cyclo ./Src/sys_clocks.d ./Src/sys_clocks.o ./Src/sys_clocks.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/tim.cyclo ./Src/tim.d ./Src/tim.o ./Src/tim.su ./Src/uart_protocol.cyclo ./Src/uart_protocol.d ./Src/uart_protocol.o ./Src/uart_protocol.su
 
 .PHONY: clean-Src
 

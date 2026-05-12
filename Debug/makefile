@@ -33,34 +33,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := stm32_data_logger
+BUILD_ARTIFACT_NAME := STM32 Motorized Camera Platform
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-stm32_data_logger.elf \
+STM32\ Motorized\ Camera\ Platform.elf \
 
 MAP_FILES += \
-stm32_data_logger.map \
+STM32\ Motorized\ Camera\ Platform.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-stm32_data_logger.list \
+STM32\ Motorized\ Camera\ Platform.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: stm32_data_logger.elf secondary-outputs
+main-build: STM32\ Motorized\ Camera\ Platform.elf secondary-outputs
 
 # Tool invocations
-stm32_data_logger.elf stm32_data_logger.map: $(OBJS) $(USER_OBJS) C:\Users\kapi-\Desktop\projekty\KURS\stm32_data_logger\STM32L496ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "stm32_data_logger.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kapi-\Desktop\projekty\KURS\stm32_data_logger\STM32L496ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32_data_logger.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32\ Motorized\ Camera\ Platform.elf STM32\ Motorized\ Camera\ Platform.map: $(OBJS) $(USER_OBJS) C:\Users\kapi-\Desktop\projekty\KURS\STM32\ Motorized\ Camera\ Platform\STM32L496ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32 Motorized Camera Platform.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kapi-\Desktop\projekty\KURS\STM32 Motorized Camera Platform\STM32L496ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32 Motorized Camera Platform.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -69,14 +69,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-stm32_data_logger.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "stm32_data_logger.list"
+STM32\ Motorized\ Camera\ Platform.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "STM32 Motorized Camera Platform.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout stm32_data_logger.elf stm32_data_logger.list stm32_data_logger.map
+	-$(RM) STM32\ Motorized\ Camera\ Platform.elf STM32\ Motorized\ Camera\ Platform.list STM32\ Motorized\ Camera\ Platform.map STM32\\ Motorized\\ Camera\\ Platform.elf default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

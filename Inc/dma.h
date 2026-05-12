@@ -12,10 +12,4 @@
 
 
 
-void Dma2AdcInit(void);
-void Dma2AdcStart(void);
-
-void Dma2UartInit(void);
-
-
 #endif /* DMA_H_ */

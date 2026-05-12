@@ -8,13 +8,16 @@
 #include "main.h"
 #include "lpuart.h"
 #include <string.h>
-#include "adc.h"
+
 
 
 volatile uint8_t BuffTx[100];
+volatile char BuffRx[100];
 volatile int tx_busy;
 volatile uint32_t tx_index = 0;
+volatile uint32_t rx_index = 0;
 
+volatile uint8_t rx_ready = 0;
 
 
 void LPUART1_config(void)
@@ -33,8 +36,9 @@ void LPUART1_config(void)
 	GPIOC->AFR[0] |= GPIO_AFRL_AFSEL1_3;
 
 	LPUART1->CR1 |= (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
+	LPUART1->CR1 |= USART_CR1_RXNEIE;
 
-	uint32_t BRR_VALUE = 256*(48000000/115200);
+	uint32_t BRR_VALUE = 256*(80000000/115200);
 	LPUART1->BRR = BRR_VALUE;
 
 	if(BRR_VALUE < 0x300 || BRR_VALUE > 0xFFFFF)
@@ -42,14 +46,14 @@ void LPUART1_config(void)
 			while(1){};
 		}
 
-//	NVIC_SetPriority(LPUART1_IRQn, 0);
-//	NVIC_EnableIRQ(LPUART1_IRQn);
+	NVIC_SetPriority(LPUART1_IRQn, 0);
+	NVIC_EnableIRQ(LPUART1_IRQn);
 
-	LPUART1->CR3 |= USART_CR3_DMAT;
 }
 
 void LPUART1_IRQHandler(void)
 {
+	//TX
 	if(LPUART1->ISR & USART_ISR_TXE)
 	{
 		if(tx_busy == 1)
@@ -65,9 +69,28 @@ void LPUART1_IRQHandler(void)
 
 		}
 	}
+
+	//RX
+	volatile char word;
+	if(LPUART1->ISR & USART_ISR_RXNE)
+	{
+		word = LPUART1->RDR;
+
+		if(word == '\r' || word == '\n')
+		{
+			BuffRx[rx_index] = '\0';
+			rx_ready = 1;
+			rx_index = 0;
+		}
+		else
+		{
+			BuffRx[rx_index] = word;
+			rx_index++;
+		}
+	}
 }
 
-void SendString(char z[])
+void SendString(volatile char z[])
 {
 	while(tx_busy == 1);
 
@@ -86,124 +109,18 @@ void SendString(char z[])
 
 }
 
-
-void SendNumber(uint16_t num)
+uint8_t LPUART_Available(void)
 {
-	char BuffNumber[5];
-
-	uint16_t wynik1 = num % 10;
-	uint16_t wynik2 = (num / 10) % 10;
-	uint16_t wynik3 = (num / 100) % 10;
-	uint16_t wynik4 = num / 1000;
-
-	char text1 = wynik4 + '0';
-	char text2 = wynik3 + '0';
-	char text3 = wynik2 + '0';
-	char text4 = wynik1 + '0';
-	char text5 = '\0';
-
-	BuffNumber[0] = text1;
-	BuffNumber[1] = text2;
-	BuffNumber[2] = text3;
-	BuffNumber[3] = text4;
-	BuffNumber[4] = text5;
-
-	uint8_t start = 0;
-	while((BuffNumber[start] == '0') && start < 3)
+	if(rx_ready == 1)
 	{
-		start++;
-
+		return 1;
 	}
-
-
-	if(num > 9999)
-		{
-			SendString("OVF");
-		}
 	else
-		{
-			SendString(start + BuffNumber);
-		}
-
-}
-
-void SendStringDma(char z[])
-{
-	while(tx_busy == 1);
-
-	int copy_index = 0;
-
-	while(z[copy_index] != '\0')
 	{
-		BuffTx[copy_index] = z[copy_index];
-		copy_index ++;
-	}
-	BuffTx[copy_index] = '\0';
-
-	DMA2_Channel6->CCR &= ~(DMA_CCR_EN);
-	DMA2_Channel6->CPAR = (uint32_t)&LPUART1->TDR;
-	DMA2_Channel6->CMAR = (uint32_t)&BuffTx[0];
-
-	DMA2_Channel6->CNDTR = copy_index;
-	tx_busy = 1;
-	DMA2_Channel6->CCR |= DMA_CCR_EN;
-
-}
-
-
-void DMA2_CH6_IRQHandler(void)
-{
-	if(DMA2->ISR & DMA_ISR_TCIF6)
-		{
-			DMA2->IFCR |= DMA_IFCR_CTCIF6;
-			tx_busy = 0;
-
-		}
-}
-
-
-void SendNumberDma(uint16_t num)
-{
-	char BuffNumber[5];
-
-	uint16_t wynik1 = num % 10;
-	uint16_t wynik2 = (num / 10) % 10;
-	uint16_t wynik3 = (num / 100) % 10;
-	uint16_t wynik4 = num / 1000;
-
-	char text1 = wynik4 + '0';
-	char text2 = wynik3 + '0';
-	char text3 = wynik2 + '0';
-	char text4 = wynik1 + '0';
-	char text5 = '\0';
-
-	BuffNumber[0] = text1;
-	BuffNumber[1] = text2;
-	BuffNumber[2] = text3;
-	BuffNumber[3] = text4;
-	BuffNumber[4] = text5;
-
-	uint8_t start = 0;
-	while((BuffNumber[start] == '0') && start < 3)
-	{
-		start++;
-
+		return 0;
 	}
 
-
-	if(num > 9999)
-		{
-			SendStringDma("OVF");
-		}
-	else
-		{
-			SendStringDma(start + BuffNumber);
-		}
-
 }
-
-
-
 
 
 

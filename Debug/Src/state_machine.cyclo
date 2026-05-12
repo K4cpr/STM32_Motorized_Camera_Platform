@@ -1,0 +1,4 @@
+../Src/state_machine.c:16:6:StateMachine_Init	1
+../Src/state_machine.c:22:6:StateMachine_SetMode	7
+../Src/state_machine.c:52:15:StateMachine_GetMode	1
+../Src/state_machine.c:57:6:StateMachine_Run	1

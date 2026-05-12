@@ -1,5 +1,0 @@
-../Drivers/CMSIS/Include/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static,ignoring_inline_asm
-../Drivers/CMSIS/Include/core_cm4.h:1809:22:__NVIC_SetPriority	16	static
-../Src/tim.c:16:6:Tim6Init	4	static
-../Src/tim.c:25:6:Tim6Start	8	static
-../Src/tim.c:37:6:TIM6_DACUNDER_IRQHandler	4	static

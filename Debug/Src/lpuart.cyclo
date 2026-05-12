@@ -1,7 +1,6 @@
-../Src/lpuart.c:20:6:LPUART1_config	3
-../Src/lpuart.c:51:6:LPUART1_IRQHandler	4
-../Src/lpuart.c:70:6:SendString	3
-../Src/lpuart.c:90:6:SendNumber	4
-../Src/lpuart.c:130:6:SendStringDma	3
-../Src/lpuart.c:154:6:DMA2_CH6_IRQHandler	2
-../Src/lpuart.c:165:6:SendNumberDma	4
+../Drivers/CMSIS/Include/core_cm4.h:1679:22:__NVIC_EnableIRQ	2
+../Drivers/CMSIS/Include/core_cm4.h:1809:22:__NVIC_SetPriority	2
+../Src/lpuart.c:23:6:LPUART1_config	3
+../Src/lpuart.c:54:6:LPUART1_IRQHandler	7
+../Src/lpuart.c:93:6:SendString	3
+../Src/lpuart.c:112:9:LPUART_Available	2

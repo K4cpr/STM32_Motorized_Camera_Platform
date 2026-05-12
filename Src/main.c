@@ -19,39 +19,20 @@
 #include "main.h"
 #include "sys_clocks.h"
 #include "lpuart.h"
-#include "adc.h"
-#include "tim.h"
-#include "dma.h"
+#include "uart_protocol.h"
 
 
-volatile uint16_t AdcAvg;
-volatile uint16_t Volt_adc;
+
 
 int main(void)
 {
 	SystemClockSetup();
 	LPUART1_config();
-	Adc_Init();
-	Dma2AdcInit();
-	Dma2AdcStart();
-	AdcDmaStart();
-	Tim6Init();
-	Tim6Start();
-	AdcResult();
-	Dma2UartInit();
+
     while(1)
     {
-    	if(minute == 1)
-    	{
-        	AdcAvg = AdcResultAvg();
-        	Volt_adc = Adc_Volt_Read();
-    		minute = 0;
-        	SendStringDma("AVG: ");
-        	SendNumberDma(AdcAvg);
-        	SendStringDma("\r\n mV: ");
-        	SendNumberDma(Volt_adc);
-        	SendStringDma("\r\n");
-    	}
+    	UART_Protocol_Process();
+
     }
 }
 

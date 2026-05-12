@@ -9,12 +9,6 @@
 #define TIM_H_
 
 
-void Tim6Init(void);
-void Tim6Start(void);
-
-void TIM6_DACUNDER_IRQHandler(void);
-
-
 
 
 

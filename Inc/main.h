@@ -13,7 +13,9 @@
 #include "sys_clocks.h"
 #include "tim.h"
 
-extern volatile uint16_t num;
-extern volatile uint16_t minute;
+extern volatile char BuffRx[100];
+extern volatile uint8_t rx_ready;
+
+
 
 #endif /* MAIN_H_ */
