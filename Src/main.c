@@ -20,6 +20,7 @@
 #include "sys_clocks.h"
 #include "lpuart.h"
 #include "uart_protocol.h"
+#include "state_machine.h"
 
 
 
@@ -28,11 +29,12 @@ int main(void)
 {
 	SystemClockSetup();
 	LPUART1_config();
+	StateMachine_Init();
 
     while(1)
     {
     	UART_Protocol_Process();
-
+    	StateMachine_Run();
     }
 }
 

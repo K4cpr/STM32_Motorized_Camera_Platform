@@ -43,7 +43,7 @@ void StateMachine_SetMode(void)
 	}
 	else if(current_command == CMD_UNKNOWN)
 	{
-		state = IDLE;
+		state = ERROR;
 	}
 
 }
@@ -60,7 +60,23 @@ void StateMachine_Run(void)
 
 	if(state == IDLE)
 	{
-		//
+		// IDLE MODE
+	}
+	else if(state == UART)
+	{
+		//UART MODE
+	}
+	else if(state == SCAN)
+	{
+		//SCAN MODE
+	}
+	else if(state == MANUAL)
+	{
+		//MANUAL  MODE
+	}
+	else
+	{
+		//error
 	}
 }
 

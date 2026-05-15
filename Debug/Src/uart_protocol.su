@@ -1,3 +1,5 @@
-../Src/uart_protocol.c:16:6:ParseCommand	16	static
-../Src/uart_protocol.c:54:6:HandleCommand	8	static
-../Src/uart_protocol.c:83:6:UART_Protocol_Process	8	static
+../Src/uart_protocol.c:23:6:ParseWords	16	static
+../Src/uart_protocol.c:64:9:StringToInt	16	static
+../Src/uart_protocol.c:84:6:ParseCommand	8	static
+../Src/uart_protocol.c:125:6:HandleCommand	64	static
+../Src/uart_protocol.c:158:6:UART_Protocol_Process	8	static

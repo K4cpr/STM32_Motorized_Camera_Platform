@@ -22,6 +22,8 @@ typedef enum
 
 } command_t;
 
+void ParseWords(void);
+uint8_t StringToInt(void);
 void ParseCommand(void);
 void HandleCommand(void);
 void UART_Protocol_Process(void);

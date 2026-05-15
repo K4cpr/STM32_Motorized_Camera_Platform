@@ -10,19 +10,80 @@
 #include "lpuart.h"
 #include <string.h>
 #include <uart_protocol.h>
+#include "state_machine.h"
+#include <stdio.h>
 
 command_t current_command;
+state_machine state2;
+uint8_t Value = 0;
+uint8_t Speed_Percent = 0;
+static char word[100];
+static char word2[100];
+
+void ParseWords(void)
+{
+	word[0] = '\0';
+	word2[0] = '\0';
+
+	uint8_t i = 0;
+	uint8_t w = 0;
+	uint8_t w2 = 0;
+
+	uint8_t after_space = 0;
+	while(BuffRx[i] != '\0')
+	{
+		if(BuffRx[i] == ' ')
+		{
+			after_space = 1;
+			i++;
+			continue;
+		}
+		if(after_space == 0)
+		{
+			if(w < 99)
+			{
+				word[w] = BuffRx[i];
+				w++;
+			}
+		}
+		else
+		{
+			if(w2 < 99)
+			{
+				word2[w2] = BuffRx[i];
+				w2++;
+			}
+		}
+		i++;
+
+	}
+	word[w] = '\0';
+	word2[w2] = '\0';
+}
+
+uint8_t StringToInt(void)
+{
+	uint8_t num = 0;
+	uint8_t result = 0;
+	while(word2[num] != '\0')
+	{
+		if(word2[num] >= '0' && word2[num] <= '9')
+		{
+			result = result * 10 + (word2[num] - '0');
+			if(result > 100)
+			{
+				state2 = ERROR;
+			}
+		}
+		num++;
+
+	}
+	return result;
+}
 
 void ParseCommand(void)
 {
-	static char word[100];
-	uint8_t i = 0;
-	while(BuffRx[i] != '\0')
-	{
-		word[i] = BuffRx[i];
-		i++;
-	}
-	word[i] = '\0';
+	ParseWords();
 
 	if(strcmp(word, "STATUS") == 0)
 	{
@@ -42,7 +103,17 @@ void ParseCommand(void)
 	}
 	else if(strcmp(word, "SPEED") == 0)
 	{
-		current_command = CMD_SPEED;
+		Value = StringToInt();
+		if(Value <=100)
+		{
+			Speed_Percent = Value;
+			current_command = CMD_SPEED;
+		}
+		else
+		{
+			SendString("error, max speed = 100");
+			current_command = CMD_UNKNOWN;
+		}
 	}
 	else
 	{
@@ -71,7 +142,11 @@ void HandleCommand(void)
 	}
 	else if(current_command == CMD_SPEED)
 	{
-		SendString("SPEED MODE"), SendString("\r\n");
+		char tx[50];
+
+		sprintf(tx, "SPEED MODE %d\r\n", Speed_Percent);
+
+		SendString(tx), SendString("\r\n");
 	}
 	else if(current_command == CMD_UNKNOWN)
 	{
@@ -86,6 +161,7 @@ void UART_Protocol_Process(void)
 	{
 		ParseCommand();
 		HandleCommand();
+		StateMachine_SetMode();
 		rx_ready = 0;
 	}
 }

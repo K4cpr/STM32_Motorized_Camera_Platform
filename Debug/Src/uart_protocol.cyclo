@@ -1,3 +1,5 @@
-../Src/uart_protocol.c:16:6:ParseCommand	7
-../Src/uart_protocol.c:54:6:HandleCommand	7
-../Src/uart_protocol.c:83:6:UART_Protocol_Process	2
+../Src/uart_protocol.c:23:6:ParseWords	6
+../Src/uart_protocol.c:64:9:StringToInt	5
+../Src/uart_protocol.c:84:6:ParseCommand	7
+../Src/uart_protocol.c:125:6:HandleCommand	7
+../Src/uart_protocol.c:158:6:UART_Protocol_Process	2
