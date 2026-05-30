@@ -21,20 +21,27 @@
 #include "lpuart.h"
 #include "uart_protocol.h"
 #include "state_machine.h"
-
+#include "motor.h"
+#include "tim.h"
 
 
 
 int main(void)
 {
 	SystemClockSetup();
+	Motor_Init();
+	Tim15Init();
+	Tim15_Start();
 	LPUART1_config();
 	StateMachine_Init();
 
+//	Motor_Right();
+
     while(1)
     {
-    	UART_Protocol_Process();
-    	StateMachine_Run();
+//    	UART_Protocol_Process();
+//    	StateMachine_Run();
+//    	Motor_Off();
     }
 }
 
