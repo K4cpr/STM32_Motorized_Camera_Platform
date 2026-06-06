@@ -1,4 +1,5 @@
 "./Src/ascii.o"
+"./Src/encoder.o"
 "./Src/i2c.o"
 "./Src/joy.o"
 "./Src/lpuart.o"

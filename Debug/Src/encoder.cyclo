@@ -1,0 +1,7 @@
+../Src/encoder.c:20:6:encoder_init	1
+../Src/encoder.c:45:10:encoder_GetResult	1
+../Src/encoder.c:50:6:encoder_reset	1
+../Src/encoder.c:60:9:encoder_GetChange	1
+../Src/encoder.c:69:9:encoder_GetPositionAngle	1
+../Src/encoder.c:74:9:encoder_GetSpeed	1
+../Src/encoder.c:80:6:encoder_Update	2

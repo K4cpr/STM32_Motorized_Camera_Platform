@@ -11,7 +11,8 @@
 #include "motor.h"
 
 // TIM15 CHANNEL 1 - PWM
-
+// TIM3 CHANNEL 1 - ENC A
+// TIM3 CHANNEL 2 - ENC B
 
 void Tim15Init(void)
 {
@@ -19,6 +20,14 @@ void Tim15Init(void)
 	RCC->APB2ENR |= RCC_APB2ENR_TIM15EN;
 
 	TIM15->CNT = 0;
+}
+
+void Tim3Init(void)
+{
+	RCC->APB1ENR1 &= ~(RCC_APB1ENR1_TIM3EN);
+	RCC->APB1ENR1 |= RCC_APB1ENR1_TIM3EN;
+
+	TIM3->CNT = 0;
 }
 
 void Tim15_Start(void)
@@ -38,3 +47,32 @@ void Tim15_Start(void)
 	TIM15->BDTR |= TIM_BDTR_MOE;
 	TIM15->CR1  |= TIM_CR1_CEN;
 }
+
+void Tim3_Start(void)
+{
+	TIM3->PSC = 0;
+	TIM3->ARR = 0XFFFF;
+
+	TIM3->SMCR &= ~(TIM_SMCR_SMS);
+	TIM3->SMCR |= TIM_SMCR_SMS_0 | TIM_SMCR_SMS_1;
+
+	TIM3->CCMR1 &= ~(TIM_CCMR1_CC1S);
+	TIM3->CCMR1 &= ~(TIM_CCMR1_CC2S);
+
+	TIM3->CCMR1 |= TIM_CCMR1_CC1S_0;
+	TIM3->CCMR1 |= TIM_CCMR1_CC2S_0;
+
+	TIM3->CCER &= ~(TIM_CCER_CC1P);
+	TIM3->CCER &= ~(TIM_CCER_CC2P);
+
+	TIM3->CCER |= TIM_CCER_CC1E;
+	TIM3->CCER |= TIM_CCER_CC2E;
+
+	TIM3->CR1  |= TIM_CR1_CEN;
+}
+
+
+
+
+
+

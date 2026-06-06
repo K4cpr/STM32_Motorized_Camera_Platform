@@ -26,15 +26,19 @@
 #include "i2c.h"
 #include "oled.h"
 #include "joy.h"
+#include "encoder.h"
 
-
-
+volatile uint32_t encoder_cnt;
+volatile int32_t encoder_angle;
+volatile int32_t encoder_rpm;
 int main(void)
 {
 	SystemClockSetup();
 	Motor_Init();
 	Tim15Init();
+	Tim3Init();
 	Tim15_Start();
+	Tim3_Start();
 	LPUART1_config();
 	StateMachine_Init();
 	I2C1_Init();
@@ -42,9 +46,14 @@ int main(void)
 	OLED_Clear();
 	joy_init();
 
+	encoder_init();
 
     while(1)
     {
+    	encoder_Update();
+    	encoder_angle = encoder_GetPositionAngle();
+    	encoder_rpm = encoder_GetSpeed();
+
     	UART_Protocol_Process();
     	StateMachine_Run();
     }
