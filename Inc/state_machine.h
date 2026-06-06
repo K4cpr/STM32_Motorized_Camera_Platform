@@ -25,6 +25,8 @@ extern command_t current_command;
 void StateMachine_Init(void);
 void StateMachine_SetMode(void);
 state_machine StateMachine_GetMode(void);
+void StateMachine_ChangeMode(state_machine new_state);
 void StateMachine_Run(void);
+
 
 #endif /* STATE_MACHINE_H_ */

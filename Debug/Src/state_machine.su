@@ -1,4 +1,5 @@
-../Src/state_machine.c:16:6:StateMachine_Init	4	static
-../Src/state_machine.c:22:6:StateMachine_SetMode	4	static
-../Src/state_machine.c:52:15:StateMachine_GetMode	4	static
-../Src/state_machine.c:57:6:StateMachine_Run	8	static
+../Src/state_machine.c:17:6:StateMachine_Init	4	static
+../Src/state_machine.c:23:6:StateMachine_SetMode	4	static
+../Src/state_machine.c:53:15:StateMachine_GetMode	4	static
+../Src/state_machine.c:58:6:StateMachine_ChangeMode	16	static
+../Src/state_machine.c:63:6:StateMachine_Run	8	static

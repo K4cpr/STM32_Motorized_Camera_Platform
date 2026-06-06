@@ -23,6 +23,9 @@
 #include "state_machine.h"
 #include "motor.h"
 #include "tim.h"
+#include "i2c.h"
+#include "oled.h"
+#include "joy.h"
 
 
 
@@ -34,14 +37,16 @@ int main(void)
 	Tim15_Start();
 	LPUART1_config();
 	StateMachine_Init();
+	I2C1_Init();
+	OLED_Init();
+	OLED_Clear();
+	joy_init();
 
-//	Motor_Right();
 
     while(1)
     {
-//    	UART_Protocol_Process();
-//    	StateMachine_Run();
-//    	Motor_Off();
+    	UART_Protocol_Process();
+    	StateMachine_Run();
     }
 }
 

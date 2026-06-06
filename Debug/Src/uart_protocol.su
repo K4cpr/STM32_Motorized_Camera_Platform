@@ -1,5 +1,11 @@
-../Src/uart_protocol.c:23:6:ParseWords	16	static
-../Src/uart_protocol.c:64:9:StringToInt	16	static
-../Src/uart_protocol.c:84:6:ParseCommand	8	static
-../Src/uart_protocol.c:125:6:HandleCommand	64	static
-../Src/uart_protocol.c:158:6:UART_Protocol_Process	8	static
+../Src/uart_protocol.c:24:6:ParseWords	16	static
+../Src/uart_protocol.c:65:9:StringToInt	16	static
+../Src/uart_protocol.c:85:6:ParseCommand	8	static
+../Src/uart_protocol.c:134:6:U_STATUS	8	static
+../Src/uart_protocol.c:149:6:U_LEFT	8	static
+../Src/uart_protocol.c:169:6:U_RIGHT	8	static
+../Src/uart_protocol.c:189:6:U_STOP	8	static
+../Src/uart_protocol.c:209:6:U_SPEED	112	static
+../Src/uart_protocol.c:244:6:U_UNKNOWN	8	static
+../Src/uart_protocol.c:257:6:HandleCommand	8	static
+../Src/uart_protocol.c:313:6:UART_Protocol_Process	8	static

@@ -7,7 +7,9 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  ../Drivers/CMSIS/Include/mpu_armv7.h \
  ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h \
  ../Inc/sys_clocks.h ../Inc/tim.h ../Inc/sys_clocks.h ../Inc/lpuart.h \
- ../Inc/uart_protocol.h ../Inc/state_machine.h ../Inc/uart_protocol.h
+ ../Inc/uart_protocol.h ../Inc/state_machine.h ../Inc/uart_protocol.h \
+ ../Inc/motor.h ../Inc/main.h ../Inc/tim.h ../Inc/i2c.h ../Inc/oled.h \
+ ../Inc/joy.h
 ../Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/STM32L496xx.h:
 ../Drivers/CMSIS/Include/core_cm4.h:
@@ -23,3 +25,9 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 ../Inc/uart_protocol.h:
 ../Inc/state_machine.h:
 ../Inc/uart_protocol.h:
+../Inc/motor.h:
+../Inc/main.h:
+../Inc/tim.h:
+../Inc/i2c.h:
+../Inc/oled.h:
+../Inc/joy.h:

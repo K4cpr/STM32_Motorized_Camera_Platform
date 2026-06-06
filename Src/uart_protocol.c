@@ -12,11 +12,12 @@
 #include <uart_protocol.h>
 #include "state_machine.h"
 #include <stdio.h>
+#include "motor.h"
+#include "oled.h"
 
 command_t current_command;
-state_machine state2;
 uint8_t Value = 0;
-uint8_t Speed_Percent = 0;
+uint8_t Speed_Percent = 50;
 static char word[100];
 static char word2[100];
 
@@ -72,7 +73,7 @@ uint8_t StringToInt(void)
 			result = result * 10 + (word2[num] - '0');
 			if(result > 100)
 			{
-				state2 = ERROR;
+				StateMachine_ChangeMode(ERROR);
 			}
 		}
 		num++;
@@ -101,6 +102,14 @@ void ParseCommand(void)
 	{
 		current_command = CMD_STOP;
 	}
+	else if(strcmp(word, "UART") == 0)
+	{
+	    current_command = CMD_UART;
+	}
+	else if(strcmp(word, "JOY") == 0)
+	{
+	    current_command = CMD_JOY;
+	}
 	else if(strcmp(word, "SPEED") == 0)
 	{
 		Value = StringToInt();
@@ -122,35 +131,181 @@ void ParseCommand(void)
 
 }
 
-void HandleCommand(void)
+void U_STATUS(void)
 {
-	if(current_command == CMD_STATUS)
+	motor_running = 0;
+	SendString("SYSTEM OK"), SendString("\r\n");
+	OLED_Clear();
+	OLED_SetCursor(0,0);
+	OLED_WriteString("SYSTEM OK");
+
+	OLED_SetCursor(4,0);
+	OLED_WriteString("SPEED: ");
+	OLED_SetCursor(4,36);
+	OLED_WriteInt(Speed_Percent);
+	OLED_SetCursor(6,0);
+	OLED_WriteString("MODE: UART");
+}
+void U_LEFT(void)
+{
+	motor_running = 1;
+	SendString("MOVE LEFT"), SendString("\r\n");
+	sprintf(txt, "SPEED=%d\r\n", Speed_Percent);
+	SendString(txt);
+    Motor_Left();
+
+	OLED_Clear();
+	OLED_SetCursor(2,0);
+	OLED_WriteString("MOVING LEFT");
+
+	OLED_SetCursor(4,0);
+	OLED_WriteString("SPEED: ");
+	OLED_SetCursor(4,36);
+	OLED_WriteInt(Speed_Percent);
+
+	OLED_SetCursor(6,0);
+	OLED_WriteString("MODE: UART");
+}
+void U_RIGHT(void)
+{
+	motor_running = 1;
+	SendString("MOVE Right"), SendString("\r\n");
+	sprintf(txt, "SPEED=%d\r\n", Speed_Percent);
+	SendString(txt);
+    Motor_Right();
+
+	OLED_Clear();
+	OLED_SetCursor(2,0);
+	OLED_WriteString("MOVING RIGHT");
+
+	OLED_SetCursor(4,0);
+	OLED_WriteString("SPEED: ");
+	OLED_SetCursor(4,36);
+	OLED_WriteInt(Speed_Percent);
+
+	OLED_SetCursor(6,0);
+	OLED_WriteString("MODE: UART");
+}
+void U_STOP(void)
+{
+	motor_running = 0;
+	SendString("STOP"), SendString("\r\n");
+	SendString("SPEED 0"), SendString("\r\n");
+	Motor_Off();
+
+	OLED_Clear();
+	OLED_SetCursor(2,0);
+	OLED_WriteString("STOP");
+
+
+	OLED_SetCursor(4,0);
+	OLED_WriteString("SPEED: ");
+	OLED_SetCursor(4,36);
+	OLED_WriteInt(0);
+
+	OLED_SetCursor(6,0);
+	OLED_WriteString("MODE: UART");
+}
+void U_SPEED(void)
+{
+	if(motor_running == 1)
 	{
-		SendString("SYSTEM OK"), SendString("\r\n");
-	}
-	else if(current_command == CMD_LEFT)
-	{
-		SendString("MOVE LEFT"), SendString("\r\n");
-	}
-	else if(current_command == CMD_RIGHT)
-	{
-		SendString("MOVE RIGHT"), SendString("\r\n");
-	}
-	else if(current_command == CMD_STOP)
-	{
-		SendString("STOP"), SendString("\r\n");
-	}
-	else if(current_command == CMD_SPEED)
-	{
-		char tx[50];
+		char tx[100];
 
 		sprintf(tx, "SPEED MODE %d\r\n", Speed_Percent);
 
-		SendString(tx), SendString("\r\n");
+		SendString(tx);
+		TIM15->CCR1 = Speed(Speed_Percent);
+		OLED_Clear();
+
+		if(last_move == 1)
+		{
+
+			OLED_SetCursor(2,0);
+			OLED_WriteString("MOVING LEFT");
+		}
+		else if(last_move == 0)
+		{
+
+			OLED_SetCursor(2,0);
+			OLED_WriteString("MOVING RIGHT");
+		}
+
+
+		OLED_SetCursor(4,0);
+		OLED_WriteString("SPEED: ");
+		OLED_SetCursor(4,36);
+		OLED_WriteInt(Speed_Percent);
+		OLED_SetCursor(6,0);
+		OLED_WriteString("MODE: UART");
 	}
-	else if(current_command == CMD_UNKNOWN)
+
+}
+void U_UNKNOWN(void)
+{
+	motor_running = 0;
+	SendString("UNKNOWN COMMAND"), SendString("\r\n");
+	Motor_Off();
+	OLED_Clear();
+	OLED_SetCursor(4,0);
+	OLED_WriteString("UNKNOWN COMMAND");
+	OLED_SetCursor(6,0);
+	OLED_WriteString("MODE: UART");
+}
+
+
+void HandleCommand(void)
+{
+	if(current_command == CMD_UART)
 	{
-		SendString("UNKNOWN COMMAND"), SendString("\r\n");
+
+	    StateMachine_ChangeMode(UART);
+
+	    SendString("UART MODE\r\n");
+
+	    OLED_Clear();
+	    OLED_SetCursor(0,0);
+	    OLED_WriteString("UART MODE");
+	}
+	else if(current_command == CMD_JOY)
+	{
+	    StateMachine_ChangeMode(MANUAL);
+
+	    SendString("JOY MODE\r\n");
+
+	    OLED_Clear();
+	    OLED_SetCursor(0,0);
+	    OLED_WriteString("JOY MODE");
+	}
+
+	else if(StateMachine_GetMode() == UART)
+	{
+	    if(current_command == CMD_STATUS)
+	    {
+	        U_STATUS();
+	    }
+	    else if(current_command == CMD_LEFT)
+	    {
+	        last_move = 1;
+	        U_LEFT();
+	    }
+	    else if(current_command == CMD_RIGHT)
+	    {
+	        last_move = 0;
+	        U_RIGHT();
+	    }
+	    else if(current_command == CMD_STOP)
+	    {
+	        U_STOP();
+	    }
+	    else if(current_command == CMD_SPEED)
+	    {
+	        U_SPEED();
+	    }
+	    else if(current_command == CMD_UNKNOWN)
+	    {
+	        U_UNKNOWN();
+	    }
 	}
 
 }
@@ -161,9 +316,9 @@ void UART_Protocol_Process(void)
 	{
 		ParseCommand();
 		HandleCommand();
-		StateMachine_SetMode();
 		rx_ready = 0;
 	}
 }
+
 
 

@@ -26,7 +26,7 @@ void Tim15_Start(void)
 	TIM15->PSC = 79;
 	TIM15->ARR = 999;
 
-	TIM15->CCR1 = Speed(70);
+	TIM15->CCR1 = Speed(50);
 
 	TIM15->CCMR1 &= ~(TIM_CCMR1_OC1M);
 	TIM15->CCMR1 |= (TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2);

@@ -1,0 +1,5 @@
+../Src/motor.c:12:6:Motor_Init	4	static
+../Src/motor.c:34:6:Motor_Left	4	static
+../Src/motor.c:40:6:Motor_Right	4	static
+../Src/motor.c:46:6:Motor_Off	4	static
+../Src/motor.c:52:10:Speed	24	static

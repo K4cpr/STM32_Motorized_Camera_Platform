@@ -9,6 +9,7 @@
 #include <string.h>
 #include "state_machine.h"
 #include "uart_protocol.h"
+#include "joy.h"
 
 state_machine state;
 
@@ -54,9 +55,14 @@ state_machine StateMachine_GetMode(void)
 	return state;
 }
 
+void StateMachine_ChangeMode(state_machine new_state)
+{
+    state = new_state;
+}
+
 void StateMachine_Run(void)
 {
-	StateMachine_SetMode();
+	//StateMachine_SetMode();
 
 	if(state == IDLE)
 	{
@@ -64,7 +70,7 @@ void StateMachine_Run(void)
 	}
 	else if(state == UART)
 	{
-		//UART MODE
+		UART_Protocol_Process();
 	}
 	else if(state == SCAN)
 	{
@@ -72,7 +78,7 @@ void StateMachine_Run(void)
 	}
 	else if(state == MANUAL)
 	{
-		//MANUAL  MODE
+		Joy_Read();
 	}
 	else
 	{

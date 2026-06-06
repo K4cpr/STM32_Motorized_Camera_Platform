@@ -5,9 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/dma.c \
+../Src/ascii.c \
+../Src/i2c.c \
+../Src/joy.c \
 ../Src/lpuart.c \
 ../Src/main.c \
+../Src/motor.c \
+../Src/oled.c \
 ../Src/state_machine.c \
 ../Src/sys_clocks.c \
 ../Src/syscalls.c \
@@ -16,9 +20,13 @@ C_SRCS += \
 ../Src/uart_protocol.c 
 
 OBJS += \
-./Src/dma.o \
+./Src/ascii.o \
+./Src/i2c.o \
+./Src/joy.o \
 ./Src/lpuart.o \
 ./Src/main.o \
+./Src/motor.o \
+./Src/oled.o \
 ./Src/state_machine.o \
 ./Src/sys_clocks.o \
 ./Src/syscalls.o \
@@ -27,9 +35,13 @@ OBJS += \
 ./Src/uart_protocol.o 
 
 C_DEPS += \
-./Src/dma.d \
+./Src/ascii.d \
+./Src/i2c.d \
+./Src/joy.d \
 ./Src/lpuart.d \
 ./Src/main.d \
+./Src/motor.d \
+./Src/oled.d \
 ./Src/state_machine.d \
 ./Src/sys_clocks.d \
 ./Src/syscalls.d \
@@ -45,7 +57,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/dma.cyclo ./Src/dma.d ./Src/dma.o ./Src/dma.su ./Src/lpuart.cyclo ./Src/lpuart.d ./Src/lpuart.o ./Src/lpuart.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/state_machine.cyclo ./Src/state_machine.d ./Src/state_machine.o ./Src/state_machine.su ./Src/sys_clocks.cyclo ./Src/sys_clocks.d ./Src/sys_clocks.o ./Src/sys_clocks.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/tim.cyclo ./Src/tim.d ./Src/tim.o ./Src/tim.su ./Src/uart_protocol.cyclo ./Src/uart_protocol.d ./Src/uart_protocol.o ./Src/uart_protocol.su
+	-$(RM) ./Src/ascii.cyclo ./Src/ascii.d ./Src/ascii.o ./Src/ascii.su ./Src/i2c.cyclo ./Src/i2c.d ./Src/i2c.o ./Src/i2c.su ./Src/joy.cyclo ./Src/joy.d ./Src/joy.o ./Src/joy.su ./Src/lpuart.cyclo ./Src/lpuart.d ./Src/lpuart.o ./Src/lpuart.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/motor.cyclo ./Src/motor.d ./Src/motor.o ./Src/motor.su ./Src/oled.cyclo ./Src/oled.d ./Src/oled.o ./Src/oled.su ./Src/state_machine.cyclo ./Src/state_machine.d ./Src/state_machine.o ./Src/state_machine.su ./Src/sys_clocks.cyclo ./Src/sys_clocks.d ./Src/sys_clocks.o ./Src/sys_clocks.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/tim.cyclo ./Src/tim.d ./Src/tim.o ./Src/tim.su ./Src/uart_protocol.cyclo ./Src/uart_protocol.d ./Src/uart_protocol.o ./Src/uart_protocol.su
 
 .PHONY: clean-Src
 

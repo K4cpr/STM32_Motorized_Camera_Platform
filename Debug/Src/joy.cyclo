@@ -1,0 +1,7 @@
+../Src/joy.c:22:6:joy_init	1
+../Src/joy.c:47:6:up	5
+../Src/joy.c:82:6:down	5
+../Src/joy.c:116:6:right	1
+../Src/joy.c:136:6:left	1
+../Src/joy.c:156:6:ok	1
+../Src/joy.c:180:6:Joy_Read	11
