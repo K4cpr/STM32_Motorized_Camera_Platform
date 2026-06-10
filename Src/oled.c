@@ -200,6 +200,46 @@ void OLED_WriteInt(uint16_t num)
 
 }
 
+void OLED_Write_Int(int32_t num)
+{
+    char BuffNumber[7];
+
+    if(num < 0)
+    {
+        OLED_WriteChar('-');
+        num = -num;
+    }
+
+    uint16_t wynik1 = num % 10;
+    uint16_t wynik2 = (num / 10) % 10;
+    uint16_t wynik3 = (num / 100) % 10;
+    uint16_t wynik4 = (num / 1000) % 10;
+    uint16_t wynik5 = (num / 10000) % 10;
+
+    BuffNumber[0] = wynik5 + '0';
+    BuffNumber[1] = wynik4 + '0';
+    BuffNumber[2] = wynik3 + '0';
+    BuffNumber[3] = wynik2 + '0';
+    BuffNumber[4] = wynik1 + '0';
+    BuffNumber[5] = '\0';
+
+    uint8_t start = 0;
+
+    while((BuffNumber[start] == '0') && (start < 4))
+    {
+        start++;
+    }
+
+    if(num > 99999)
+    {
+        OLED_WriteString("OVF");
+    }
+    else
+    {
+        OLED_WriteString(start + BuffNumber);
+    }
+}
+
 
 
 

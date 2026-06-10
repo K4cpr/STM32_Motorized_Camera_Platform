@@ -39,6 +39,8 @@ void U_UNKNOWN(void);
 
 void HandleCommand(void);
 void UART_Protocol_Process(void);
+void TakeMode(void);
+void TakeModeAGAIN(void);
 
 
 #endif /* UART_PROTOCOL_H_ */

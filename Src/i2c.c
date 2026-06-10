@@ -106,52 +106,6 @@ void I2C1_WriteBuffer(uint32_t adr, uint8_t *buff, uint8_t length)
 
 
 
-//
-//uint8_t I2C1_CheckDevice(uint32_t adr, uint8_t data)
-//{
-//	uint32_t NBYTES = 1;
-//	uint32_t SADD = adr;
-//
-//	uint32_t Value = 0;
-//
-//	Value |= SADD;
-//	Value |= (NBYTES << 16);
-//	Value |= I2C_CR2_AUTOEND;
-//	Value |= I2C_CR2_START;
-//
-//	I2C1->CR2 = Value;
-//
-//	while(!(I2C1->ISR & I2C_ISR_TXIS))
-//	{
-//
-//	}
-//
-//	I2C1->TXDR = data;
-//
-//
-//	while((!(I2C1->ISR & I2C_ISR_NACKF)) && (!(I2C1->ISR & I2C_ISR_STOPF)))
-//	{
-//	}
-//
-//	if(I2C1->ISR & I2C_ISR_NACKF)
-//	{
-//		I2C1->ICR |= I2C_ICR_NACKCF;
-//		I2C1->ICR |= I2C_ICR_STOPCF;
-//		return 0;
-//	}
-//	if(I2C1->ISR & I2C_ISR_STOPF)
-//	{
-//		I2C1->ICR |= I2C_ICR_STOPCF;
-//		return 1;
-//	}
-//
-//	I2C1->ICR |= I2C_ICR_STOPCF;
-//
-//	return 1;
-//}
-
-
-
 
 
 

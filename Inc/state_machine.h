@@ -21,6 +21,7 @@ typedef enum
 }state_machine;
 
 extern command_t current_command;
+extern state_machine state;
 
 void StateMachine_Init(void);
 void StateMachine_SetMode(void);

@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include "motor.h"
 #include "oled.h"
+#include "encoder.h"
+
 
 command_t current_command;
 uint8_t Value = 0;
@@ -84,51 +86,65 @@ uint8_t StringToInt(void)
 
 void ParseCommand(void)
 {
-	ParseWords();
+    ParseWords();
 
-	if(strcmp(word, "STATUS") == 0)
-	{
-		current_command = CMD_STATUS;
-	}
-	else if(strcmp(word, "LEFT") == 0)
-	{
-		current_command = CMD_LEFT;
-	}
-	else if(strcmp(word, "RIGHT") == 0)
-	{
-		current_command = CMD_RIGHT;
-	}
-	else if(strcmp(word, "STOP") == 0)
-	{
-		current_command = CMD_STOP;
-	}
-	else if(strcmp(word, "UART") == 0)
-	{
-	    current_command = CMD_UART;
-	}
-	else if(strcmp(word, "JOY") == 0)
-	{
-	    current_command = CMD_JOY;
-	}
-	else if(strcmp(word, "SPEED") == 0)
-	{
-		Value = StringToInt();
-		if(Value <=100)
-		{
-			Speed_Percent = Value;
-			current_command = CMD_SPEED;
-		}
-		else
-		{
-			SendString("error, max speed = 100");
-			current_command = CMD_UNKNOWN;
-		}
-	}
-	else
-	{
-		current_command = CMD_UNKNOWN;
-	}
+    if(strcmp(word, "UART") == 0)
+    {
+        current_command = CMD_UART;
+    }
+    else if(strcmp(word, "JOY") == 0)
+    {
+        current_command = CMD_JOY;
+    }
+    else if(state == IDLE || state == ERROR)
+    {
+        StateMachine_ChangeMode(ERROR);
+        current_command = CMD_UNKNOWN;
+    }
+    else if(strcmp(word, "STATUS") == 0)
+    {
+        current_command = CMD_STATUS;
+    }
+    else if(strcmp(word, "LEFT") == 0)
+    {
+        current_command = CMD_LEFT;
+    }
+    else if(strcmp(word, "RIGHT") == 0)
+    {
+        current_command = CMD_RIGHT;
+    }
+    else if(strcmp(word, "STOP") == 0)
+    {
+        current_command = CMD_STOP;
+    }
+    else if(strcmp(word, "SPEED") == 0)
+    {
+        Value = StringToInt();
 
+        if(state != UART)
+        {
+            current_command = CMD_UNKNOWN;
+        }
+        else if(motor_running == 0)
+        {
+            SendString("ERROR: MOTOR STOPPED\r\n");
+            current_command = CMD_UNKNOWN;
+        }
+        else if(Value <= 100)
+        {
+            Speed_Percent = Value;
+            current_command = CMD_SPEED;
+        }
+        else
+        {
+            SendString("ERROR: MAX SPEED = 100\r\n");
+            current_command = CMD_UNKNOWN;
+        }
+    }
+    else
+    {
+        current_command = CMD_UNKNOWN;
+    }
 }
 
 void U_STATUS(void)
@@ -139,32 +155,35 @@ void U_STATUS(void)
 	OLED_SetCursor(0,0);
 	OLED_WriteString("SYSTEM OK");
 
-	OLED_SetCursor(4,0);
+	OLED_SetCursor(2,0);
 	OLED_WriteString("SPEED: ");
-	OLED_SetCursor(4,36);
+	OLED_SetCursor(2,36);
 	OLED_WriteInt(Speed_Percent);
-	OLED_SetCursor(6,0);
+	OLED_SetCursor(4,0);
 	OLED_WriteString("MODE: UART");
 }
 void U_LEFT(void)
 {
 	motor_running = 1;
+
 	SendString("MOVE LEFT"), SendString("\r\n");
 	sprintf(txt, "SPEED=%d\r\n", Speed_Percent);
 	SendString(txt);
     Motor_Left();
+    encoder_ResetSpeed();
 
 	OLED_Clear();
-	OLED_SetCursor(2,0);
+	OLED_SetCursor(0,0);
 	OLED_WriteString("MOVING LEFT");
 
-	OLED_SetCursor(4,0);
+	OLED_SetCursor(2,0);
 	OLED_WriteString("SPEED: ");
-	OLED_SetCursor(4,36);
+	OLED_SetCursor(2,36);
 	OLED_WriteInt(Speed_Percent);
 
-	OLED_SetCursor(6,0);
+	OLED_SetCursor(4,0);
 	OLED_WriteString("MODE: UART");
+
 }
 void U_RIGHT(void)
 {
@@ -173,72 +192,75 @@ void U_RIGHT(void)
 	sprintf(txt, "SPEED=%d\r\n", Speed_Percent);
 	SendString(txt);
     Motor_Right();
+    encoder_ResetSpeed();
 
 	OLED_Clear();
-	OLED_SetCursor(2,0);
+	OLED_SetCursor(0,0);
 	OLED_WriteString("MOVING RIGHT");
 
-	OLED_SetCursor(4,0);
+	OLED_SetCursor(2,0);
 	OLED_WriteString("SPEED: ");
-	OLED_SetCursor(4,36);
+	OLED_SetCursor(2,36);
 	OLED_WriteInt(Speed_Percent);
 
-	OLED_SetCursor(6,0);
+	OLED_SetCursor(4,0);
 	OLED_WriteString("MODE: UART");
 }
 void U_STOP(void)
 {
 	motor_running = 0;
+
 	SendString("STOP"), SendString("\r\n");
 	SendString("SPEED 0"), SendString("\r\n");
 	Motor_Off();
+	encoder_ResetSpeed();
 
 	OLED_Clear();
-	OLED_SetCursor(2,0);
+	OLED_SetCursor(0,0);
 	OLED_WriteString("STOP");
 
 
-	OLED_SetCursor(4,0);
+	OLED_SetCursor(2,0);
 	OLED_WriteString("SPEED: ");
-	OLED_SetCursor(4,36);
+	OLED_SetCursor(2,36);
 	OLED_WriteInt(0);
 
-	OLED_SetCursor(6,0);
+	OLED_SetCursor(4,0);
 	OLED_WriteString("MODE: UART");
 }
 void U_SPEED(void)
 {
-	if(motor_running == 1)
+	char tx[100];
+
+	sprintf(tx, "SPEED MODE %d\r\n", Speed_Percent);
+
+	SendString(tx);
+
+	TIM15->CCR1 = Speed(Speed_Percent);
+	encoder_ResetSpeed();
+	OLED_Clear();
+
+	if(last_move == 1)
 	{
-		char tx[100];
 
-		sprintf(tx, "SPEED MODE %d\r\n", Speed_Percent);
-
-		SendString(tx);
-		TIM15->CCR1 = Speed(Speed_Percent);
-		OLED_Clear();
-
-		if(last_move == 1)
-		{
-
-			OLED_SetCursor(2,0);
-			OLED_WriteString("MOVING LEFT");
-		}
-		else if(last_move == 0)
-		{
-
-			OLED_SetCursor(2,0);
-			OLED_WriteString("MOVING RIGHT");
-		}
-
-
-		OLED_SetCursor(4,0);
-		OLED_WriteString("SPEED: ");
-		OLED_SetCursor(4,36);
-		OLED_WriteInt(Speed_Percent);
-		OLED_SetCursor(6,0);
-		OLED_WriteString("MODE: UART");
+		OLED_SetCursor(0,0);
+		OLED_WriteString("MOVING LEFT");
 	}
+	else if(last_move == 0)
+	{
+
+		OLED_SetCursor(0,0);
+		OLED_WriteString("MOVING RIGHT");
+	}
+
+
+	OLED_SetCursor(2,0);
+	OLED_WriteString("SPEED: ");
+	OLED_SetCursor(2,36);
+	OLED_WriteInt(Speed_Percent);
+	OLED_SetCursor(4,0);
+	OLED_WriteString("MODE: UART");
+
 
 }
 void U_UNKNOWN(void)
@@ -247,9 +269,9 @@ void U_UNKNOWN(void)
 	SendString("UNKNOWN COMMAND"), SendString("\r\n");
 	Motor_Off();
 	OLED_Clear();
-	OLED_SetCursor(4,0);
+	OLED_SetCursor(2,0);
 	OLED_WriteString("UNKNOWN COMMAND");
-	OLED_SetCursor(6,0);
+	OLED_SetCursor(4,0);
 	OLED_WriteString("MODE: UART");
 }
 
@@ -263,9 +285,35 @@ void HandleCommand(void)
 
 	    SendString("UART MODE\r\n");
 
+
+
 	    OLED_Clear();
-	    OLED_SetCursor(0,0);
-	    OLED_WriteString("UART MODE");
+
+		if(last_move == 1)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("MOVING LEFT");
+		}
+		else if(last_move == 0)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("MOVING RIGHT");
+		}
+		else if(last_move == 2)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("STOP");
+		}
+
+		OLED_SetCursor(2,0);
+		OLED_WriteString("SPEED: ");
+		OLED_SetCursor(2,36);
+		OLED_WriteInt(Speed_Percent);
+		OLED_SetCursor(4,0);
+		OLED_WriteString("MODE: UART");
 	}
 	else if(current_command == CMD_JOY)
 	{
@@ -274,14 +322,39 @@ void HandleCommand(void)
 	    SendString("JOY MODE\r\n");
 
 	    OLED_Clear();
-	    OLED_SetCursor(0,0);
-	    OLED_WriteString("JOY MODE");
+
+		if(last_move == 1)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("MOVING LEFT");
+		}
+		else if(last_move == 0)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("MOVING RIGHT");
+		}
+		else if(last_move == 2)
+		{
+
+			OLED_SetCursor(0,0);
+			OLED_WriteString("STOP");
+		}
+
+		OLED_SetCursor(2,0);
+		OLED_WriteString("SPEED: ");
+		OLED_SetCursor(2,36);
+		OLED_WriteInt(Speed_Percent);
+		OLED_SetCursor(4,0);
+		OLED_WriteString("MODE: JOY");
 	}
 
 	else if(StateMachine_GetMode() == UART)
 	{
 	    if(current_command == CMD_STATUS)
 	    {
+	    	last_move = 2;
 	        U_STATUS();
 	    }
 	    else if(current_command == CMD_LEFT)
@@ -296,10 +369,13 @@ void HandleCommand(void)
 	    }
 	    else if(current_command == CMD_STOP)
 	    {
+	    	last_move = 2;
+	    	motor_running = 0;
 	        U_STOP();
 	    }
 	    else if(current_command == CMD_SPEED)
 	    {
+
 	        U_SPEED();
 	    }
 	    else if(current_command == CMD_UNKNOWN)
@@ -319,6 +395,26 @@ void UART_Protocol_Process(void)
 		rx_ready = 0;
 	}
 }
+
+void TakeMode(void)
+{
+    SendString("Hello take mode\r\n");
+    SendString("MODE: UART\r\n");
+    SendString("MODE: JOY\r\n");
+}
+
+void TakeModeAGAIN(void)
+{
+
+    SendString("MODE: UART\r\n");
+    SendString("MODE: JOY\r\n");
+}
+
+
+
+
+
+
 
 
 

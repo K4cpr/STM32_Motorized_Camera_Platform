@@ -18,5 +18,6 @@ void OLED_SetCursor(uint8_t page, uint8_t column);
 void OLED_WriteChar(char c);
 void OLED_WriteString(const char *z);
 void OLED_WriteInt(uint16_t num);
+void OLED_Write_Int(int32_t num);
 
 #endif /* OLED_H_ */

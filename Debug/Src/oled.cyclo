@@ -8,3 +8,4 @@
 ../Src/oled.c:134:6:OLED_WriteChar	3
 ../Src/oled.c:153:6:OLED_WriteString	2
 ../Src/oled.c:164:6:OLED_WriteInt	4
+../Src/oled.c:203:6:OLED_Write_Int	5

@@ -1,7 +1,10 @@
-../Src/encoder.c:20:6:encoder_init	1
-../Src/encoder.c:45:10:encoder_GetResult	1
-../Src/encoder.c:50:6:encoder_reset	1
-../Src/encoder.c:60:9:encoder_GetChange	1
-../Src/encoder.c:69:9:encoder_GetPositionAngle	1
-../Src/encoder.c:74:9:encoder_GetSpeed	1
-../Src/encoder.c:80:6:encoder_Update	2
+../Src/encoder.c:23:6:encoder_init	1
+../Src/encoder.c:48:10:encoder_GetResult	1
+../Src/encoder.c:53:6:encoder_reset	1
+../Src/encoder.c:63:6:encoder_ResetSpeed	1
+../Src/encoder.c:72:9:encoder_GetChange	1
+../Src/encoder.c:81:9:encoder_GetPositionAngle	1
+../Src/encoder.c:86:9:encoder_GetSpeed	1
+../Src/encoder.c:92:6:encoder_Update	4
+../Src/encoder.c:126:6:OLED_ShowEncoderData	1
+../Src/encoder.c:139:9:encoder_GetSpeedint	2

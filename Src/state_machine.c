@@ -10,8 +10,11 @@
 #include "state_machine.h"
 #include "uart_protocol.h"
 #include "joy.h"
+#include "lpuart.h"
+
 
 state_machine state;
+static uint8_t error_printed = 0;
 
 
 void StateMachine_Init(void)
@@ -58,6 +61,10 @@ state_machine StateMachine_GetMode(void)
 void StateMachine_ChangeMode(state_machine new_state)
 {
     state = new_state;
+    if(new_state == UART || new_state == MANUAL)
+    {
+        error_printed = 0;
+    }
 }
 
 void StateMachine_Run(void)
@@ -80,9 +87,15 @@ void StateMachine_Run(void)
 	{
 		Joy_Read();
 	}
-	else
+	else if(state == ERROR)
 	{
-		//error
+	    if(error_printed == 0)
+	    {
+	        SendString("ERROR: UNKNOWN MODE\r\n");
+	        TakeModeAGAIN();
+
+	        error_printed = 1;
+	    }
 	}
 }
 

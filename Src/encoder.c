@@ -10,12 +10,15 @@
 #include "encoder.h"
 #include "tim.h"
 #include "sys_clocks.h"
+#include "oled.h"
 
 static int32_t position = 0;
 static int32_t angle = 0;
 static int32_t rpm = 0;
 static uint32_t last_time = 0;
 static uint16_t last_CNT;
+static int32_t speed_counts = 0;
+static uint8_t skip_speed_sample = 0;
 
 void encoder_init(void)
 {
@@ -57,6 +60,15 @@ void encoder_reset(void)
 	TIM3->CNT = 0;
 }
 
+void encoder_ResetSpeed(void)
+{
+    speed_counts = 0;
+    rpm = 0;
+    last_time = GetSystemTick();
+    last_CNT = TIM3->CNT;
+    skip_speed_sample = 1;
+}
+
 int16_t encoder_GetChange(void)
 {
 	uint16_t current_CNT = encoder_GetResult();
@@ -84,16 +96,55 @@ void encoder_Update(void)
     position += change;
     angle = position * 360 / 7680;
 
+    speed_counts += change;
+
     uint32_t current_time = GetSystemTick();
 
-    if((current_time - last_time) >= 100)
+    if((current_time - last_time) >= 500)
     {
-        rpm = change * 60000 / 7680;
+        int32_t new_rpm = speed_counts * 12000 / 7680;
+
+        if(new_rpm < 0)
+        {
+            new_rpm = -new_rpm;
+        }
+
+        if(skip_speed_sample)
+        {
+            skip_speed_sample = 0;
+        }
+        else
+        {
+            rpm = new_rpm;
+        }
+
+        speed_counts = 0;
         last_time = current_time;
     }
-
-
 }
 
+void OLED_ShowEncoderData(void)
+{
+    OLED_SetCursor(6,0);
+    OLED_WriteString("ANGLE:");
+    OLED_SetCursor(6,40);
+    OLED_Write_Int(encoder_GetPositionAngle());
 
+    OLED_SetCursor(7,0);
+    OLED_WriteString("RPM:");
+    OLED_SetCursor(7,40);
+    OLED_Write_Int(encoder_GetSpeedint());
+}
+
+int32_t encoder_GetSpeedint(void)
+{
+    int32_t speed = rpm;
+
+    if(speed < 0)
+    {
+        speed = -speed;
+    }
+
+    return speed;
+}
 
