@@ -1,5 +1,0 @@
-../Src/motor.c:12:6:Motor_Init	1
-../Src/motor.c:34:6:Motor_Left	1
-../Src/motor.c:40:6:Motor_Right	1
-../Src/motor.c:46:6:Motor_Off	1
-../Src/motor.c:52:10:Speed	1

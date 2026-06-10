@@ -1,4 +1,0 @@
-../Src/tim.c:17:6:Tim15Init	4	static
-../Src/tim.c:25:6:Tim3Init	4	static
-../Src/tim.c:33:6:Tim15_Start	8	static
-../Src/tim.c:51:6:Tim3_Start	4	static
